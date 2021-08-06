@@ -1,27 +1,34 @@
 package tests;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.StoreAppCreateAccountPage;
 import pages.StoreAppHomePage;
 import pages.StoreAppLoginPage;
-import utilities.BrowserUtils;
-import utilities.ConfigReader;
-import utilities.DataUtils;
-import utilities.TestBase;
+import utilities.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 public class StoreRegisterFunctionalityTests extends TestBase {
 
+    String email;
+    String password;
+
     @DataProvider(name = "signUpDataProvider")
     public static Object[][] testData(){
         Object[][] data = new Object[][]{
-                {"John","Doe","123456",DataUtils.generateRandomNumber(30)+"","1","2021","1234 W Ardmore","Chicago","13","12345","21","12345678"},//Set 1
-                {"Kim","Yi","abcdefg","1","12","1980","5678 MyRoad st.","New York","32","54321","21","987654321"},//Set2
-                {"Patel","Harsh","abc1234","1","12","1980","5678 MyRoad st.","New York","32","54321","21","987654321"}//Set3
+                {"John","Doe","67890",DataUtils.generateRandomNumber(30)+"","1","2021","1234 W Ardmore","Chicago","13","12345","21","12345678"},//Set 1
+                {"Kim","Yi","abcef","1","12","1980","5678 MyRoad st.","New York","32","54321","21","987654321"},//Set2
+                {"Patel","Harsh","bnm123","1","12","1980","5678 MyRoad st.","New York","32","54321","21","987654321"}//Set3
 
         };
         return data;
@@ -36,11 +43,13 @@ public class StoreRegisterFunctionalityTests extends TestBase {
 
         driver.get(ConfigReader.getProperty("StoreAppURL"));
         storeAppHomePage.loginButton.click();
-        storeAppCreateAccountPage.emailBox.sendKeys(DataUtils.generateEmail());
+        email=DataUtils.generateEmail();
+        storeAppLoginPage.emailBox.sendKeys(email);
         storeAppLoginPage.submitButton.click();
         storeAppCreateAccountPage.gender.click();
         storeAppCreateAccountPage.firstNameBox.sendKeys(firstName);
         storeAppCreateAccountPage.lastNameBox.sendKeys(lastName);
+        this.password=password;
         storeAppCreateAccountPage.passwordBox.sendKeys(password);
         //This will dropdown instead of Select method
         BrowserUtils.selectByValue(storeAppCreateAccountPage.daysBox, day);
@@ -53,10 +62,68 @@ public class StoreRegisterFunctionalityTests extends TestBase {
         BrowserUtils.selectByValue(storeAppCreateAccountPage.country, country);
         storeAppCreateAccountPage.phoneNumber.sendKeys(phoneNumber);
         storeAppCreateAccountPage.registerButton.click();
+        BrowserUtils.takeScreenshot("SignUpValidation");
         String actualTitle = driver.getTitle();
         String expectedTitle = "My account - My Store";
-        Assert.assertEquals(actualTitle, expectedTitle, "Actual title " + actualTitle + " didn't match with expected title " + expectedTitle);
+        Assert.assertEquals(actualTitle, expectedTitle, "Actual title " + actualTitle +
+                " didn't match with expected title " + expectedTitle);
+
+
 
 
     }
+
+    //Login functionality
+    @Test(dependsOnMethods = {"test1"}, groups = {"regression","smoke"})
+    public void test2(){
+        StoreAppHomePage storeAppHomePage=new StoreAppHomePage();
+        StoreAppLoginPage storeAppLoginPage=new StoreAppLoginPage();
+        driver.get(ConfigReader.getProperty("StoreAppURL"));
+        storeAppHomePage.loginButton.click();
+        storeAppLoginPage.loginEmailBox.sendKeys(email);
+        storeAppLoginPage.loginpasswordBox.sendKeys(password);
+        storeAppLoginPage.loginbutton.click();
+        BrowserUtils.takeScreenshot("LogInValidation");
+        String actualTitle=driver.getTitle();
+        String expectedTitle="My account - My Store";
+        Assert.assertEquals(actualTitle,expectedTitle,"Title for log in in did not match");
+
+    }
+
+
+    /**
+     * This method will take a screenshot of browser.
+     * Ex;
+     *     .takeScreenshot("LoginTest");
+     */
+    public  static void takeScreenshot(String name) throws IOException {
+        WebDriver driver= Driver.getDriver();
+        File screenshot= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+                  //instead of copypath we use user.dir
+        String path=System.getProperty("user.dir")+"/src/test/resources/screenshots/"+name+System.currentTimeMillis()+".png";
+        File file= new File(path);
+        FileUtils.copyFile(screenshot,file);
+    }
+    /**
+     * This method will til elemnt is clickable
+     * Ex:
+     *      .waitElementToBeClickable(element);-> returns element;
+     *
+     */
+    public static WebElement waitElementToBeVisible(WebElement element){
+        WebDriverWait wait= new WebDriverWait(Driver.getDriver(),10);
+        WebElement element1 =wait.until(ExpectedConditions.visibilityOf(element));//Explicitly wait
+        return element1;
+    }
+    /**
+     * This method will scroll the page.
+     * Ex:
+     *       .scroll(250);
+     */
+    public static void scroll(int pixels){
+        WebDriver driver=Driver.getDriver();
+        JavascriptExecutor js = ((JavascriptExecutor) driver);
+        js.executeScript("window.scrollBy(0,"+pixels+")");
+    }
+
 }

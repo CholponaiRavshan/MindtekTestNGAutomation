@@ -14,4 +14,7 @@ public class BrowserUtils {
         Select select =new Select(element);
         select.selectByValue(value);
     }
+
+    public static void takeScreenshot(String signUp) {
+    }
 }
