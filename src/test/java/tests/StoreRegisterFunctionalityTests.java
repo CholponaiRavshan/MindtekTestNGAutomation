@@ -36,7 +36,7 @@ public class StoreRegisterFunctionalityTests extends TestBase {
 
     @Test(dataProvider = "signUpDataProvider",groups = {"regression","smoke"})
     public void test1(String firstName, String lastName, String password, String day,String month,String year,String address,
-                      String city, String state,String zipcode,String country,String phoneNumber) {
+                      String city, String state,String zipcode,String country,String phoneNumber) throws IOException {
         StoreAppHomePage storeAppHomePage = new StoreAppHomePage();
         StoreAppLoginPage storeAppLoginPage = new StoreAppLoginPage();
         StoreAppCreateAccountPage storeAppCreateAccountPage = new StoreAppCreateAccountPage();
@@ -75,7 +75,7 @@ public class StoreRegisterFunctionalityTests extends TestBase {
 
     //Login functionality
     @Test(dependsOnMethods = {"test1"}, groups = {"regression","smoke"})
-    public void test2(){
+    public void test2() throws IOException {
         StoreAppHomePage storeAppHomePage=new StoreAppHomePage();
         StoreAppLoginPage storeAppLoginPage=new StoreAppLoginPage();
         driver.get(ConfigReader.getProperty("StoreAppURL"));
@@ -125,5 +125,4 @@ public class StoreRegisterFunctionalityTests extends TestBase {
         JavascriptExecutor js = ((JavascriptExecutor) driver);
         js.executeScript("window.scrollBy(0,"+pixels+")");
     }
-
 }

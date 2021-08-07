@@ -9,6 +9,9 @@
         <classes>
             <class name="tests.RedshelfTests"></class>
             <class name="tests.BlazedemoTest2"></class>
+            <class name="tests.StoreTest"></class>
+            <class name="tests.StoreRegisterFunctionalityTests"></class>
+            <class name="tests.StoreAddCartTests"></class>
 
         </classes>
     </test>
