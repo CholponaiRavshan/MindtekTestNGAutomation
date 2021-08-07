@@ -52,7 +52,7 @@ public class ExpediaTestCase extends TestBase {
 
         }
         @Test
-        public void test3(){
+        public void test3() throws InterruptedException {
 
             driver.get(ConfigReader.getProperty("ExpediaAppURL"));
             ExpediaFlightsResultsPage expediaFlightsResultsPage=new ExpediaFlightsResultsPage();
@@ -67,6 +67,7 @@ public class ExpediaTestCase extends TestBase {
             expediaHomePage.searchButton.click();
             expediaFlightsResultsPage.oneStopButton.click();
             expediaFlightsResultsPage.supportButton.click();
+            expediaFlightsResultsPage.chatButton.click();
             String expectedTitle = "Customer Service Portal";
             String actualTitle = driver.getTitle();
             Assert.assertEquals(actualTitle, expectedTitle);
@@ -94,12 +95,13 @@ public class ExpediaTestCase extends TestBase {
              expediaHomePage.stayButton.click();
              expediaStayPage.goingToButton.sendKeys("Honolulu"+Keys.ENTER);
              expediaStayPage.getCheckInButton.click();
-             expediaStayPage.checkInDate.click();
-            expediaStayPage.doneButton.click();
-            expediaStayPage.getCheckOutButton.click();
-            expediaStayPage.checkOutDate.click();
-            expediaStayPage.getDoneButton.click();
+             expediaStayPage.doneButton.click();
              expediaStayPage.getSearchButton.click();
+             String expectedTitle = "Honolulu Hotel Search Results";
+             String actualTitle = driver.getTitle();
+             Assert.assertEquals(actualTitle, expectedTitle);
+
+
 
 
         }

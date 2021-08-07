@@ -20,5 +20,8 @@ public class ExpediaFlightsResultsPage extends TestBase {
 
         @FindBy(id = "support-cs")
         public WebElement supportButton;
+
+        @FindBy(xpath = "//button[@class='btn ico-btn-chatNow']")
+        public WebElement chatButton;
     }
 
